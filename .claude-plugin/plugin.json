@@ -1,0 +1,23 @@
+{
+  "name": "minik",
+  "displayName": "minik.cc",
+  "version": "1.2.0",
+  "description": "Create and manage minik.cc short links, then ask where their visits come from: countries, sources, apps, devices, sudden rises, QR scans and website goals. Counts only, never single visitors.",
+  "author": {
+    "name": "Space Island Ltd",
+    "email": "hello@minik.cc",
+    "url": "https://minik.cc"
+  },
+  "homepage": "https://minik.cc/developers",
+  "repository": "https://github.com/keremozcan/minik-plugin",
+  "license": "MIT",
+  "privacyPolicyUrl": "https://minik.cc/gizlilik",
+  "keywords": [
+    "links",
+    "url-shortener",
+    "analytics",
+    "qr-code",
+    "utm"
+  ],
+  "mcpServers": "./.mcp.json"
+}

@@ -1,0 +1,11 @@
+{
+  "name": "minik",
+  "version": "1.2.0",
+  "description": "minik.cc short links and their visit stats, through your minik.cc account.",
+  "contextFileName": "skills/minik/SKILL.md",
+  "mcpServers": {
+    "minik": {
+      "httpUrl": "https://minik.cc/mcp"
+    }
+  }
+}

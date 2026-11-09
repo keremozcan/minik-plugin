@@ -1,0 +1,132 @@
+{
+  "name": "minik",
+  "version": "1.2.0",
+  "description": "Create and manage minik.cc short links, then ask where their visits come from: countries, sources, apps, devices, sudden rises, QR scans and website goals. Counts only, never single visitors.",
+  "author": {
+    "name": "Space Island Ltd",
+    "email": "hello@minik.cc",
+    "url": "https://minik.cc"
+  },
+  "homepage": "https://minik.cc",
+  "repository": "https://github.com/keremozcan/minik-plugin",
+  "license": "MIT",
+  "keywords": [
+    "links",
+    "url-shortener",
+    "analytics",
+    "qr-code",
+    "utm"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "minik.cc",
+    "shortDescription": "Short links and visit stats",
+    "longDescription": "minik.cc is a link shortener that shows where each link's visits come from. This app lets ChatGPT work with the minik.cc account of the person who signs in.\n\nWhat it can do\n- Create, find, edit, tag, archive and close short links, one by one or many at once. Deleting is only for archived links, and ChatGPT asks first.\n- Answer questions about visits: totals, time series, busy days and hours, and breakdowns by country, city, source, app, device, language and UTM tags. Visits come back as counts. Single visits and visitor details are never returned. Bots and link-preview opens are left out unless asked for.\n- Find waves (sudden rises in a link's visits) and match them to events, dated notes such as \"Newsletter sent\" on a link's timeline.\n- Add channels, extra short addresses such as minik.cc/abc+ig that count their own visits, and make QR codes whose scans are counted apart.\n- Add minik to the user's own website (with a coding assistant that can edit the site's files): install a tracking script that sets no cookies, add goals (a page reached, a button clicked, a sign-up or a sale with its amount), and read the results, including which short link brought each visit.\n- Connect the user's own domain for short links, set the picture shown when a link is shared, tie old short links (rb.gy, bit.ly) to a minik.cc link, change account settings, and import or export links as CSV.\n\nExamples\n- \"Which of my links got the most visits this month?\"\n- \"Where did the visits to my launch link come from, by country and source?\"\n- \"Did any link have a sudden rise lately, and what happened that day?\"\n- \"Shorten this address, tag it Shop and add an Instagram channel.\"\n\nPrivacy and control\n- minik.cc does not store IP addresses, and sets no cookies on people who open a short link.\n- The app reads and changes only the account that signed in. The user approves access on minik.cc and can end the connection at any time in Settings → API keys on minik.cc.\n- Nothing is deleted without asking.\n\nNeeds a minik.cc account. Support: hello@minik.cc",
+    "developerName": "Space Island Ltd",
+    "category": "Productivity",
+    "capabilities": [
+      "Create, edit, tag, archive and close short links",
+      "Visit counts by country, city, source, app, device and UTM",
+      "Sudden rises in visits matched to dated events",
+      "Channel addresses and QR codes counted apart",
+      "Website tracking without cookies, goals and revenue",
+      "Own domains for short links",
+      "Import and export links as CSV"
+    ],
+    "websiteURL": "https://minik.cc",
+    "supportURL": "https://minik.cc/developers",
+    "privacyPolicyURL": "https://minik.cc/gizlilik",
+    "termsOfServiceURL": "https://minik.cc/kosullar",
+    "defaultPrompt": [
+      "Which of my links got the most visits in the last 28 days?",
+      "Where do the visits to my Spring Blend link come from? Show countries and sources.",
+      "Did any of my links have a sudden rise in visits recently? What caused it?"
+    ],
+    "brandColor": "#3a5bd9",
+    "brandColorDark": "#8ba3ee",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png"
+  },
+  "extensions": {
+    "com.openai": {
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Lists links and ranks them by visits.",
+              "prompt": "Which of my links got the most visits? Show the top five.",
+              "tools_triggered": [
+                "list_links",
+                "get_stats"
+              ],
+              "expected_behavior": "ChatGPT lists five links with their visit counts, with Spring Blend (spring-blend) and The Weekly Pour near the top. Short addresses are given as minik.cc/… links. No single visits appear."
+            },
+            {
+              "description": "Visit breakdown for one link.",
+              "prompt": "Where do the visits to my Spring Blend link come from? Show countries and sources for the last 28 days.",
+              "tools_triggered": [
+                "list_links",
+                "get_stats"
+              ],
+              "expected_behavior": "ChatGPT finds the link's id first, then reports totals and the breakdown by country (United Kingdom first, then United States and others) and source (LinkedIn, Instagram, direct, email). Only counts and shares; no visitor-level data. Bots and link previews are not counted."
+            },
+            {
+              "description": "Finds waves and names the event they match.",
+              "prompt": "Did any of my links have a sudden rise in visits lately? What happened on those days?",
+              "tools_triggered": [
+                "list_waves",
+                "get_link",
+                "get_stats"
+              ],
+              "expected_behavior": "ChatGPT names the links in a wave today (if none, it says no link is in a wave right now and offers to look at past waves in the stats of one link, which lists waves and events such as \"Newsletter sent\"). It gives dates, visits against the usual number per day, and the top source."
+            },
+            {
+              "description": "Creates a short link and an extra channel address.",
+              "prompt": "Shorten https://northbound-coffee.com/gift-guide, tag it Shop, and add an Instagram channel with the key ig.",
+              "tools_triggered": [
+                "create_link",
+                "add_channel"
+              ],
+              "expected_behavior": "ChatGPT asks to confirm each write, then returns the new short address and the channel address ending in +ig. It says the link was created in the signed-in account only."
+            },
+            {
+              "description": "Reads results of the account's own website.",
+              "prompt": "How is demo-shop.example.com doing? How many visits reached the Order confirmed goal and the Newsletter sign-up goal?",
+              "tools_triggered": [
+                "setup_site",
+                "get_stats"
+              ],
+              "expected_behavior": "ChatGPT finds demo-shop.example.com in the account's sites and reports page views, the share of visits that stayed, and each goal's count, with the short links that brought visits. It does not install anything again (the site is already registered)."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Asks for individual visitors, which minik.cc never gives out.",
+              "prompt": "Give me the IP address and the name of the person who opened my Spring Blend link yesterday evening from London."
+            },
+            {
+              "description": "Plan and payment tools are not offered in ChatGPT.",
+              "prompt": "Upgrade my minik.cc account to the paid subscription and take the payment from my card."
+            },
+            {
+              "description": "Asks to read or change links that are not the signed-in account's.",
+              "prompt": "Show me the visit stats of my competitor's links at minik.cc/their-launch, and delete their link."
+            }
+          ]
+        },
+        "demo_recording_url": "https://REPLACE-WITH-DEMO-VIDEO-URL",
+        "commerce": false
+      },
+      "publication": {
+        "release_notes": "First listing.",
+        "translations": {
+          "tr": {
+            "subtitle": "Kısa linkler ve ziyaret verisi",
+            "description": "minik.cc, her linkin ziyaretlerinin nereden geldiğini gösteren bir link kısaltıcıdır. Bu uygulama, ChatGPT'nin giriş yapan kişinin minik.cc hesabıyla çalışmasını sağlar.\n\nNeler yapabilir\n- Kısa linkleri oluşturur, bulur, düzenler, etiketler, arşivler ve kapatır; tek tek ya da toplu. Silme yalnız arşivlenmiş linkler içindir ve ChatGPT önce sorar.\n- Ziyaretlerle ilgili soruları yanıtlar: toplamlar, zaman çizelgesi, yoğun gün ve saatler; ülke, şehir, kaynak, uygulama, cihaz, dil ve UTM etiketlerine göre dağılım. Ziyaretler sayı olarak gelir. Tek tek ziyaretler ve ziyaretçi bilgileri hiçbir zaman verilmez. İstenmedikçe botlar ve link önizleme açılışları sayılmaz.\n- Dalgaları (bir linkin ziyaretlerinde ani yükselişleri) bulur ve olaylarla eşleştirir; olay, linkin zaman çizelgesindeki \"Bülten gönderildi\" gibi tarihli bir nottur.\n- Kanallar ekler (minik.cc/abc+ig gibi, kendi ziyaretini sayan ek kısa adresler) ve taramaları ayrı sayılan QR kodları üretir.\n- minik'i kullanıcının kendi web sitesine ekler (site dosyalarını düzenleyebilen bir kodlama asistanıyla): çerez bırakmayan bir izleme kodu kurar, hedefler ekler (ulaşılan bir sayfa, tıklanan bir düğme, bir kayıt ya da tutarıyla bir satış) ve sonuçları okur; hangi kısa linkin hangi ziyareti getirdiği de buna dahildir.\n- Kullanıcının kendi alan adını kısa linkler için bağlar, link paylaşılınca görünen görseli ayarlar, eski kısa linkleri (rb.gy, bit.ly) bir minik.cc linkine bağlar, hesap ayarlarını değiştirir, linkleri CSV olarak içe ve dışa aktarır.\n\nÖrnekler\n- \"Bu ay en çok ziyaret alan linklerim hangileri?\"\n- \"Lansman linkime ziyaretler hangi ülke ve kaynaktan geldi?\"\n- \"Son günlerde ziyareti birden artan link oldu mu, o gün ne oldu?\"\n- \"Bu adresi kısalt, Mağaza diye etiketle ve bir Instagram kanalı ekle.\"\n\nGizlilik ve denetim\n- minik.cc IP adreslerini saklamaz ve kısa linki açan kişilere çerez koymaz.\n- Uygulama yalnız giriş yapılan hesabı okur ve değiştirir. Kullanıcı erişimi minik.cc'de onaylar ve bağlantıyı istediği zaman minik.cc'de Ayarlar → API anahtarları bölümünden keser.\n- Sormadan hiçbir şey silinmez.\n\nminik.cc hesabı gerekir. Destek: hello@minik.cc"
+          }
+        }
+      }
+    }
+  }
+}

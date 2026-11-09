@@ -1,0 +1,15 @@
+{
+  "name": "minik",
+  "owner": {
+    "name": "Space Island Ltd",
+    "email": "hello@minik.cc"
+  },
+  "description": "The minik.cc plugin: short links and their visit stats, through your minik.cc account.",
+  "plugins": [
+    {
+      "name": "minik",
+      "source": "./",
+      "description": "minik.cc short links and their visit stats, through your minik.cc account."
+    }
+  ]
+}

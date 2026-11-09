@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "minik": {
+      "type": "http",
+      "url": "https://minik.cc/mcp"
+    }
+  }
+}
